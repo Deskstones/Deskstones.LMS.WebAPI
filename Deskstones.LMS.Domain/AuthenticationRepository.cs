@@ -20,7 +20,10 @@
             {
                 if (PasswordManager.VerifyPassword(user.PasswordHash, password))
                 {
-                    var token = tokenService.GenerateToken(user.Id.ToString(), user.Email);
+                    var userRegisterationDate = user.CreatedAt.ToString("dd/MM/yyy HH:mm:ss");
+                    var userRole = user.Role;
+
+                    var token = tokenService.GenerateToken(user.Id.ToString(), user.Email, userRole, userRegisterationDate);
 
                     var response = new DTOLoginResponse
                     {
@@ -50,8 +53,8 @@
                 UserName = request.UserName,
                 Email = request.Email,
                 PasswordHash = PasswordManager.HashPassword(request.Password),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             context.User.Add(newUser);

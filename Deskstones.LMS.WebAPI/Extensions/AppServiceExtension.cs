@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Software.Helper.Util;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace Deskstones.LMS.WebAPI.Extensions
 {
@@ -25,7 +26,7 @@ namespace Deskstones.LMS.WebAPI.Extensions
             ConfigureAuth(builder);
             // Add standard services to the container.
             builder.Services.AddEndpointsApiExplorer();  // Adds support for exploring endpoints
-            builder.Services.AddSwaggerGen();  // Adds Swagger/OpenAPI documentation
+            AddSwaggerGenWithAuthentication(builder);  // Adds Swagger/OpenAPI documentation
             builder.Services.AddControllers();  // Adds MVC controllers to the services container
             builder.Services.RegisterAllDI();
             builder.Services.AddCors(options =>
@@ -143,6 +144,57 @@ namespace Deskstones.LMS.WebAPI.Extensions
         private static void EnableLandingPage(WebApplicationBuilder builder)
         {
             builder.Services.AddControllersWithViews();
+        }
+
+        public static void AddSwaggerGenWithAuthentication(WebApplicationBuilder builder)
+        {
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Deskstones LMS API",
+                    Version = "v1",
+                    Description = "This API powers the Deskstones Learning Management System. It supports user authentication, course management, and admin features.",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Deskstones Support",
+                        Email = "support@deskstones.com",
+                        Url = new Uri("https://deskstones.com")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://opensource.org/licenses/MIT")
+                    }
+                });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token like this: **Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...**"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+
         }
     }
 }

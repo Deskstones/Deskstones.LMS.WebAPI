@@ -1,10 +1,12 @@
 ﻿namespace Deskstones.LMS.WebAPI.Controllers
 {
     using Deskstones.LMS.WebAPI.Interface;
+    using Deskstones.LMS.WebAPI.Util;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Software.DataContracts;
     using Software.DataContracts.Models;
+    using System.Security.Claims;
 
     [ApiController]
     [Route("user-profile")]
@@ -23,9 +25,11 @@
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(DTOGenericResponse), StatusCodes.Status200OK)]
         [Route("update")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> CreateOrUpdateUserProfileAsync([FromQuery] int userId, [FromForm] DTOUserProfileUpdateRequest request)
         {
+            AppHelper.CheckAuthorization(User, userId);
+
             return await this._service.CreateOrUpdateUserProfileAsync(userId,request);
         }
 

@@ -65,7 +65,7 @@
 
                         var statusCode = 500;
                         var message = "An unexpected error occurred.";
-                        var details = exception?.StackTrace;
+                        var details = exception?.InnerException?.Message ?? exception?.Message;
 
                         if (exception is ArgumentException || exception is InvalidOperationException || exception is CustomApiException)
                         {
@@ -93,7 +93,7 @@
                         {
                             Message = message,
                             StatusCode = statusCode,
-                            //Details = app.Environment.IsDevelopment() ? details : null // Hide details in production
+                            Details = app.Environment.IsDevelopment() ? details : null // Hide details in production
                         };
 
                         var jsonResponse = JsonSerializer.Serialize(errorResponse);

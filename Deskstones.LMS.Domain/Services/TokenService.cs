@@ -12,11 +12,13 @@
         private readonly string _jwtSecret = configuration["Jwt:Secret"] ?? throw new InvalidOperationException("Jwt:Secret not found in configuration");
         private readonly string _issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer not found in configuration");
         private readonly string _audience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience not found in configuration");
-        public string GenerateToken(string userId, string userEmail)
+        public string GenerateToken(string userId, string userEmail, string userRole, string RegisterationDate)
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim("user id", userId),
+            new Claim("user role", userRole),
+            new Claim("registeration date", RegisterationDate),
             new Claim(JwtRegisteredClaimNames.Email, userEmail),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
