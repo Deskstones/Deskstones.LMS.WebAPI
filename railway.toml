@@ -1,0 +1,8 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./Dockerfile"  # Point to the folder containing the Dockerfile
+
+[deploy]
+startCommand = "dotnet Deskstones.LMS.WebAPI.dll"
+restartPolicyType = "always"  # Fixed typo here
+healthcheckPath = "/health"
