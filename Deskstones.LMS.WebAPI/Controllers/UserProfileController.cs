@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Software.DataContracts;
     using Software.DataContracts.Models;
-    using System.Security.Claims;
 
     [ApiController]
     [Route("user-profile")]

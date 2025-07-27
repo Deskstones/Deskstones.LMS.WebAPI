@@ -9,6 +9,7 @@
             // Register the depency for ochestrators here
             services.AddScoped<IAuthenticationOrchestrator, AuthenticationOrchestrator>();
             services.AddScoped<IUserProfileOrchestrator, UserProfileOrchestrator>();
+            services.AddScoped<ISubjectOrchestrator, SubjectOrchestrator>();
 
         }
     }

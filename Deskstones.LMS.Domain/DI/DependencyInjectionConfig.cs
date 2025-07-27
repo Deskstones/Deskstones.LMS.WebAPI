@@ -12,6 +12,7 @@
         {
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddSingleton<ITokenService, TokenService>();
 
             services.AddSingleton<IFileUploader>(sp =>

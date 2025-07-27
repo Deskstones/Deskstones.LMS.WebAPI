@@ -11,6 +11,7 @@ namespace Deskstones.LMS.WebAPI.DI
             // Register the dependency used in api
             services.AddScoped<IAuthenticationController, AuthenticationControllerBehaviour>();
             services.AddScoped<IUserProfileController, UserProfileControllerBehaviour>();
+            services.AddScoped<ISubjectController, SubjectControllerBehaviour>();
 
 
         }

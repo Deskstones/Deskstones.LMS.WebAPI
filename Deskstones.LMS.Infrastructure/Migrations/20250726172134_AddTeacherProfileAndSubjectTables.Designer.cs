@@ -3,6 +3,7 @@ using System;
 using Deskstones.LMS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Deskstones.LMS.Infrastructure.Migrations
 {
     [DbContext(typeof(RailwayContext))]
-    partial class SupaContextModelSnapshot : ModelSnapshot
+    [Migration("20250726172134_AddTeacherProfileAndSubjectTables")]
+    partial class AddTeacherProfileAndSubjectTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,53 +24,6 @@ namespace Deskstones.LMS.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.Cohort", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CohortAddress")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CohourtName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TeacherProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TeacherProfileId");
-
-                    b.ToTable("Cohort");
-                });
 
             modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.Subject", b =>
                 {
@@ -98,15 +54,10 @@ namespace Deskstones.LMS.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TeacherProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherProfileId");
 
                     b.ToTable("Subject");
                 });
@@ -122,12 +73,6 @@ namespace Deskstones.LMS.Infrastructure.Migrations
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -313,30 +258,19 @@ namespace Deskstones.LMS.Infrastructure.Migrations
                     b.ToTable("UserSocial");
                 });
 
-            modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.Cohort", b =>
+            modelBuilder.Entity("SubjectTeacherProfile", b =>
                 {
-                    b.HasOne("Deskstones.LMS.Infrastructure.Models.Subject", "Subject")
-                        .WithMany("Cohorts")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("SubjectsId")
+                        .HasColumnType("integer");
 
-                    b.HasOne("Deskstones.LMS.Infrastructure.Models.TeacherProfile", "TeacherProfile")
-                        .WithMany("Cohorts")
-                        .HasForeignKey("TeacherProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("TeacherProfileId")
+                        .HasColumnType("integer");
 
-                    b.Navigation("Subject");
+                    b.HasKey("SubjectsId", "TeacherProfileId");
 
-                    b.Navigation("TeacherProfile");
-                });
+                    b.HasIndex("TeacherProfileId");
 
-            modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.Subject", b =>
-                {
-                    b.HasOne("Deskstones.LMS.Infrastructure.Models.TeacherProfile", null)
-                        .WithMany("Subjects")
-                        .HasForeignKey("TeacherProfileId");
+                    b.ToTable("TeacherSubjects", (string)null);
                 });
 
             modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.TeacherProfile", b =>
@@ -383,16 +317,19 @@ namespace Deskstones.LMS.Infrastructure.Migrations
                     b.Navigation("UserProfile");
                 });
 
-            modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.Subject", b =>
+            modelBuilder.Entity("SubjectTeacherProfile", b =>
                 {
-                    b.Navigation("Cohorts");
-                });
+                    b.HasOne("Deskstones.LMS.Infrastructure.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.TeacherProfile", b =>
-                {
-                    b.Navigation("Cohorts");
-
-                    b.Navigation("Subjects");
+                    b.HasOne("Deskstones.LMS.Infrastructure.Models.TeacherProfile", null)
+                        .WithMany()
+                        .HasForeignKey("TeacherProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Deskstones.LMS.Infrastructure.Models.User", b =>
