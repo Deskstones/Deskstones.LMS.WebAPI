@@ -6,9 +6,9 @@ namespace Deskstones.LMS.BusinessLogic
 {
     internal class UserProfileOrchestrator(IUserProfileRepository userProfileRepository):IUserProfileOrchestrator
     {
-        public async Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(int userId, DTOUserProfileUpdateRequest request)
+        public async Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(DTOUserProfileUpdateRequest request)
         {
-            return await userProfileRepository.CreateOrUpdateUserProfileAsync(userId, request);
+            return await userProfileRepository.CreateOrUpdateUserProfileAsync(request);
         }
     }
 }

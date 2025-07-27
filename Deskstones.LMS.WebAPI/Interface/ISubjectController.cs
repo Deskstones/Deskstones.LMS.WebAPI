@@ -9,5 +9,6 @@
         Task<IActionResult> GetSubjectAsync(int subjectId);
         Task<IActionResult> UpdateSubjectAsync(DTOUpdateSubjectRequest request);
         Task<IActionResult> DeleteSubjectAsync(int subjectId);
+        Task<IActionResult> GetSubjectsAsync(int pageNumber, int pageSize);
     }
 }

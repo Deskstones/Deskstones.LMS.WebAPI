@@ -7,9 +7,9 @@
 
     internal sealed class UserProfileControllerBehaviour(IUserProfileOrchestrator uerProfileOrchestrator) : IUserProfileController
     {
-        public async Task<IActionResult> CreateOrUpdateUserProfileAsync(int userId, DTOUserProfileUpdateRequest request)
+        public async Task<IActionResult> CreateOrUpdateUserProfileAsync(DTOUserProfileUpdateRequest request)
         {
-            var reponse = await uerProfileOrchestrator.CreateOrUpdateUserProfileAsync(userId, request);
+            var reponse = await uerProfileOrchestrator.CreateOrUpdateUserProfileAsync(request);
             return new OkObjectResult(reponse);
         }
     }

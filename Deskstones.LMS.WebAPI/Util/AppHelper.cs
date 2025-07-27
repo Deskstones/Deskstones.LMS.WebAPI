@@ -12,7 +12,18 @@
                 throw new UnauthorizedAccessException("Invalid or missing user ID in token.");
 
             if (jwtUserId != requestedUserId)
-                throw new UnauthorizedAccessException("You are not allowed to update another user's profile.");
+                throw new UnauthorizedAccessException("You are not allowed to perform this action.");
+        }
+
+        public static void CheckAdminAuthorization(ClaimsPrincipal user)
+        {
+            var userRole = user.Claims.FirstOrDefault(c => c.Type == "user role")?.Value;
+
+            if (string.IsNullOrEmpty(userRole))
+                throw new UnauthorizedAccessException("Invalid or missing user role in token.");
+
+            if (userRole != "Admin")
+                throw new UnauthorizedAccessException("You are not an admin.");
         }
     }
 }

@@ -4,12 +4,13 @@
     using Deskstones.LMS.Domain.Interface;
     using Deskstones.LMS.Infrastructure.Models;
     using Software.DataContracts.Models;
+    using Software.DataContracts.Shared;
 
     internal class SubjectOrchestrator(ISubjectRepository subjectRepository) : ISubjectOrchestrator
     {
         public async Task<DTOSubjectResponse> CreateSubjectAsync(DTOCreateSubjectRequest request)
         {
-            var repoRequest = new Subject
+            var repoRequest = new CourseSubject
             {
                 Code = request.Code,
                 Cost = request.Cost,
@@ -54,7 +55,7 @@
 
         public async Task<DTOGenericResponse> UpdateSubjectAsync(DTOUpdateSubjectRequest request)
         {
-           return await subjectRepository.UpdateSubjectAsync(request);
+            return await subjectRepository.UpdateSubjectAsync(request);
 
         }
 
@@ -62,6 +63,11 @@
         {
             return await subjectRepository.DeleteSubjectAsync(subjectId);
 
+        }
+
+        public async Task<DTOPaginatedList<DTOSubjectResponse>> GetSubjectsAsync(int pageNumber, int pageSize)
+        {
+            return await subjectRepository.GetSubjectsAsync(pageNumber, pageSize);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Deskstones.LMS.Infrastructure.Models
         public int TeacherProfileId { get; set; }
         public TeacherProfile TeacherProfile { get; set; } = null!;
         public int SubjectId { get; set; }
-        public Subject Subject { get; set; } = null!;
+        public CourseSubject Subject { get; set; } = null!;
         public string CohourtName { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public string CohortAddress { get; set; } = string.Empty;
@@ -20,6 +20,7 @@ namespace Deskstones.LMS.Infrastructure.Models
         public DateTime EndDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public ICollection<CohortSeries> CohortSeries { get; set; } = new List<CohortSeries>();
 
     }
 }

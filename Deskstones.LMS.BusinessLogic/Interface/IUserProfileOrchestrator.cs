@@ -4,6 +4,6 @@
 
     public interface IUserProfileOrchestrator
     {
-        Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(int userId, DTOUserProfileUpdateRequest request);
+        Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(DTOUserProfileUpdateRequest request);
     }
 }

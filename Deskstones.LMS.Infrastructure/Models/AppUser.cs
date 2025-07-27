@@ -1,6 +1,6 @@
 ﻿namespace Deskstones.LMS.Infrastructure.Models
 {
-    public class User
+    public class AppUser
     {
         public int Id { get; set; }
         public string Email { get; set; } = string.Empty;

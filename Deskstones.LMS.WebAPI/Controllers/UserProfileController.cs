@@ -25,11 +25,13 @@
         [ProducesResponseType(typeof(DTOGenericResponse), StatusCodes.Status200OK)]
         [Route("update")]
         [Authorize]
-        public async Task<IActionResult> CreateOrUpdateUserProfileAsync([FromQuery] int userId, [FromForm] DTOUserProfileUpdateRequest request)
+        public async Task<IActionResult> CreateOrUpdateUserProfileAsync([FromForm] DTOUserProfileUpdateRequest request)
         {
+            var userId = request.UserId;
+
             AppHelper.CheckAuthorization(User, userId);
 
-            return await this._service.CreateOrUpdateUserProfileAsync(userId,request);
+            return await this._service.CreateOrUpdateUserProfileAsync(request);
         }
 
  

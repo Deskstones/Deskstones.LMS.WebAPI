@@ -11,9 +11,11 @@
 
     internal sealed class UserProfileRepository(RailwayContext context, IFileUploader fileUploader) : IUserProfileRepository
     {
-        public async Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(int userId, DTOUserProfileUpdateRequest request)
+        public async Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(DTOUserProfileUpdateRequest request)
         {
-            var userExists = await context.User.AnyAsync(u => u.Id == userId);
+            var userId = request.UserId;
+
+            var userExists = await context.AppUser.AnyAsync(u => u.Id == userId);
             if (!userExists)
             {
                 throw new CustomApiException("Invalid user ID. User does not exist.");
@@ -128,7 +130,7 @@
 
         public async Task<DTOGenericResponse> DeleteUserProfileAsync(int userId)
         {
-            var userExists = await context.User.AnyAsync(u => u.Id == userId);
+            var userExists = await context.AppUser.AnyAsync(u => u.Id == userId);
 
             if (!userExists)
             {

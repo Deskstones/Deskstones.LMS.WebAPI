@@ -9,6 +9,6 @@ namespace Deskstones.LMS.Domain.Interface
 {
     public interface IUserProfileRepository
     {
-        Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(int userId, DTOUserProfileUpdateRequest request);
+        Task<DTOGenericResponse> CreateOrUpdateUserProfileAsync(DTOUserProfileUpdateRequest request);
     }
 }

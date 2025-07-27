@@ -2,9 +2,12 @@
 {
     using Microsoft.AspNetCore.Http;
     using Software.DataContracts.Shared;
+    using System.ComponentModel.DataAnnotations;
 
     public class DTOUserProfileUpdateRequest
     {
+        [Required]
+        public int UserId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string MiddleName { get; set; } = string.Empty;

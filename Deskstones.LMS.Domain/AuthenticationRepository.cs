@@ -15,10 +15,12 @@
             var email = request.Email;
             var password = request.Password;
 
-            var user = await context.User.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await context.AppUser.FirstOrDefaultAsync(u => u.Email == email);
             if (user != null)
             {
-                if (PasswordManager.VerifyPassword(user.PasswordHash, password))
+                var isCorrectPassword = PasswordManager.VerifyPassword(user.PasswordHash, password);
+
+                if (isCorrectPassword)
                 {
                     var userRegisterationDate = user.CreatedAt.ToString("dd/MM/yyy HH:mm:ss");
                     var userRole = user.Role;
@@ -27,11 +29,7 @@
 
                     var response = new DTOLoginResponse
                     {
-                        Token = token,
-                        UserName = user.UserName,
-                        UserId = user.Id,
-                        UpdatedAt = user.UpdatedAt,
-                        CreatedAt = user.CreatedAt,
+                        Token = token
                     };
 
                     return response;
@@ -42,26 +40,28 @@
 
         public async Task<DTOGenericResponse> RegisterAsync(DTORegisterationRequest request)
         {
-            var existingUser = await context.User.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+            var existingUser = await context.AppUser.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
             if (existingUser != null)
             {
                 throw new CustomApiException("This email already exists");
             }
 
-            var newUser = new User
+            var newUser = new AppUser
             {
                 UserName = request.UserName,
                 Email = request.Email,
+                Role = "Student",
                 PasswordHash = PasswordManager.HashPassword(request.Password),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
 
-            context.User.Add(newUser);
+            context.AppUser.Add(newUser);
             await context.SaveChangesAsync();
 
             var response = new DTOGenericResponse
             {
+                Id = newUser.Id,
                 Message = "Success"
             };
             

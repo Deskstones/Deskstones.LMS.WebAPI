@@ -1,4 +1,5 @@
 ﻿using Software.DataContracts.Models;
+using Software.DataContracts.Shared;
 
 namespace Deskstones.LMS.BusinessLogic.Interface
 {
@@ -8,5 +9,6 @@ namespace Deskstones.LMS.BusinessLogic.Interface
         Task<DTOSubjectResponse> GetSubjectAsync(int subjectId);
         Task<DTOGenericResponse> UpdateSubjectAsync(DTOUpdateSubjectRequest request);
         Task<DTOGenericResponse> DeleteSubjectAsync(int subjectId);
+        Task<DTOPaginatedList<DTOSubjectResponse>> GetSubjectsAsync(int pageNumber, int pageSize);
     }
 }

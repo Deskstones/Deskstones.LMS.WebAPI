@@ -30,5 +30,11 @@
             var response = await subjectOrchestrator.DeleteSubjectAsync(subjectId);
             return new OkObjectResult(response);
         }
+
+        public async Task<IActionResult> GetSubjectsAsync(int pageNumber, int pageSize)
+        {
+            var response = await subjectOrchestrator.GetSubjectsAsync(pageNumber, pageSize);
+            return new OkObjectResult(response);
+        }
     }
 }

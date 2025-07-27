@@ -1,6 +1,7 @@
 ﻿using Deskstones.LMS.Domain.Interface;
 using Deskstones.LMS.Infrastructure.Data;
 using Deskstones.LMS.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 using Software.DataContracts.Models;
 using Software.DataContracts.Shared;
 
@@ -9,9 +10,9 @@ namespace Deskstones.LMS.Domain
 {
     internal sealed class SubjectRepository(RailwayContext context) : ISubjectRepository
     {
-        public async Task<Subject> GetSubjectAsync(int subjectId)
+        public async Task<CourseSubject> GetSubjectAsync(int subjectId)
         {
-            var repsonse = await context.Subject.FindAsync(subjectId);
+            var repsonse = await context.CourseSubject.FindAsync(subjectId);
             if (repsonse == null)
             {
                 throw new CustomApiException("subject not found");
@@ -19,16 +20,16 @@ namespace Deskstones.LMS.Domain
             return repsonse;
         }
 
-        public async Task<Subject> CreateSubjectAsync(Subject request)
+        public async Task<CourseSubject> CreateSubjectAsync(CourseSubject request)
         {
-            context.Subject.Add(request);
+            context.CourseSubject.Add(request);
             await context.SaveChangesAsync();
             return request;
         }
 
         public async Task<DTOGenericResponse> UpdateSubjectAsync(DTOUpdateSubjectRequest request)
         {
-            var subject = await context.Subject.FindAsync(request.Id);
+            var subject = await context.CourseSubject.FindAsync(request.Id);
 
             if (subject == null)
             {
@@ -52,7 +53,7 @@ namespace Deskstones.LMS.Domain
 
             subject.UpdatedAt = DateTime.UtcNow;
 
-            context.Subject.Update(subject);
+            context.CourseSubject.Update(subject);
 
             await context.SaveChangesAsync();
 
@@ -65,19 +66,49 @@ namespace Deskstones.LMS.Domain
 
         public async Task<DTOGenericResponse> DeleteSubjectAsync(int subjectId)
         {
-            var subject = await context.Subject.FindAsync(subjectId);
+            var subject = await context.CourseSubject.FindAsync(subjectId);
             if (subject == null)
             {
                 throw new CustomApiException("subject not found");
             }
 
-            context.Subject.Remove(subject);
+            context.CourseSubject.Remove(subject);
             await context.SaveChangesAsync();
 
             return new DTOGenericResponse 
             { 
                 Id = subjectId,
                 Message = "subject successfully removed"
+            };
+        }
+
+        public async Task<DTOPaginatedList<DTOSubjectResponse>> GetSubjectsAsync(int pageNumber, int pageSize)
+        {
+            var query = context.CourseSubject.AsQueryable();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(s => s.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(s => new DTOSubjectResponse
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Code = s.Code,
+                    DurationInMonths = s.DurationInMonths,
+                    Cost = s.Cost
+                })
+                .ToListAsync();
+
+            return new DTOPaginatedList<DTOSubjectResponse>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = items
             };
         }
     }

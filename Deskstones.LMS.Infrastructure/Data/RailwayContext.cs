@@ -5,13 +5,15 @@
 
     public sealed class RailwayContext : DbContext
     {
-        public DbSet<User> User { get; set; }
+        public DbSet<AppUser> AppUser { get; set; }
         public DbSet<UserProfile> UserProfile { get; set; }
         public DbSet<UserAddress> UserAddress { get; set; }
         public DbSet<UserSocial> UserSocial { get; set; }
         public DbSet<TeacherProfile> TeacherProfile { get; set; }
-        public DbSet<Subject> Subject { get; set; }
+        public DbSet<CourseSubject> CourseSubject { get; set; }
         public DbSet<Cohort> Cohort { get; set; }
+        public DbSet<CohortSeries> CohortSeries { get; set; }
+        public DbSet<AttachmentBucket> AttachmentBucket { get; set; }
 
         public RailwayContext(DbContextOptions<RailwayContext> options)
             : base(options)
@@ -23,14 +25,14 @@
             base.OnModelCreating(modelBuilder);
 
             // User ↔ UserProfile (1-to-1)
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<AppUser>()
                 .HasOne(u => u.UserProfile)
                 .WithOne(up => up.User)
                 .HasForeignKey<UserProfile>(up => up.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // User ↔ TeacherProfile (1-to-1)
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<AppUser>()
                 .HasOne(u => u.TeacherProfile)
                 .WithOne(tp => tp.User)
                 .HasForeignKey<TeacherProfile>(tp => tp.UserId)
@@ -62,6 +64,13 @@
                 .HasOne(c => c.Subject)
                 .WithMany(s => s.Cohorts)
                 .HasForeignKey(c => c.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Cohort ↔ CohortSeries (1-to-many)
+            modelBuilder.Entity<CohortSeries>()
+                .HasOne(cs => cs.Cohort)
+                .WithMany(c => c.CohortSeries)
+                .HasForeignKey(cs => cs.CohortId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

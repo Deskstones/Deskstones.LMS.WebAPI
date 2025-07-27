@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Deskstones.LMS.Infrastructure.Models
 {
-    public class Subject
+    public class CourseSubject
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
