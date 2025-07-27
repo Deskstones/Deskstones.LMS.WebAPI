@@ -1,6 +1,6 @@
 ﻿namespace Deskstones.LMS.Infrastructure.Models
 {
-    public class CohortSeries
+    public class CohortModule
     {
         public int Id { get; set; }
         public int CohortId { get; set; }
@@ -10,5 +10,6 @@
         public string Summary { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public List<ModuleSeries> Series { get; set; } = new();
     }
 }

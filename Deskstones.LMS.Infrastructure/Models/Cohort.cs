@@ -20,7 +20,7 @@ namespace Deskstones.LMS.Infrastructure.Models
         public DateTime EndDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public ICollection<CohortSeries> CohortSeries { get; set; } = new List<CohortSeries>();
+        public ICollection<CohortModule> CohortModules { get; set; } = new List<CohortModule>();
 
     }
 }

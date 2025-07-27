@@ -12,7 +12,8 @@
         public DbSet<TeacherProfile> TeacherProfile { get; set; }
         public DbSet<CourseSubject> CourseSubject { get; set; }
         public DbSet<Cohort> Cohort { get; set; }
-        public DbSet<CohortSeries> CohortSeries { get; set; }
+        public DbSet<CohortModule> CohortModule { get; set; }
+        public DbSet<ModuleSeries> ModuleSeries { get; set; }
         public DbSet<AttachmentBucket> AttachmentBucket { get; set; }
 
         public RailwayContext(DbContextOptions<RailwayContext> options)
@@ -66,11 +67,18 @@
                 .HasForeignKey(c => c.SubjectId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Cohort ↔ CohortSeries (1-to-many)
-            modelBuilder.Entity<CohortSeries>()
+            // Cohort ↔ CohortModule (1-to-many)
+            modelBuilder.Entity<CohortModule>()
                 .HasOne(cs => cs.Cohort)
-                .WithMany(c => c.CohortSeries)
+                .WithMany(c => c.CohortModules)
                 .HasForeignKey(cs => cs.CohortId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CohortModule ↔ ModuleSeries (1-to-many)
+            modelBuilder.Entity<ModuleSeries>()
+                .HasOne(ms => ms.CohortModule)
+                .WithMany(cm => cm.Series)
+                .HasForeignKey(ms => ms.CohortModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
